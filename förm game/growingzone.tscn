@@ -1,0 +1,159 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://farmingTilesheetComplete.png" type="Texture2D" id=2]
+
+[sub_resource type="GDScript" id=11]
+script/source = "extends StaticBody2D
+
+var plant = Global.plantselected
+var plantgrowing = false
+var plant_grown = false
+
+func _physics_process(delta):
+	if plantgrowing == false:
+		plant = Global.plantselected
+
+
+
+
+func _on_Area2D_area_entered(area):
+	if not plantgrowing:
+		if plant == 1:
+			print(\"carrot\")
+			plantgrowing = true
+			$carrotgrowtimer.start()
+			$plant.play(\"carrotgrowing\")
+		if plant == 2:
+			
+			print(\"onion\")
+			plantgrowing = true
+			$oniongrowtimer.start()
+			$plant.play(\"oniongrowing\")
+	else:
+		print(\"plant is already growing here\")
+
+
+func _on_oniongrowtimer_timeout():
+	var onion_plant = $plant
+	if onion_plant.frame == 0:
+		onion_plant.frame = 1
+		$oniongrowtimer.start()
+	elif onion_plant.frame == 1:
+		onion_plant.frame = 2
+		plant_grown = true
+		
+
+
+func _on_carrotgrowtimer_timeout():
+	var carrot_plant = $plant
+	if carrot_plant.frame == 0:
+		carrot_plant.frame = 1
+		$carrotgrowtimer.start()
+	elif carrot_plant.frame == 1:
+		carrot_plant.frame = 2
+		plant_grown = true
+		
+		
+
+
+func _on_Area2D_input_event(viewport, event, shape_idx):
+	if Input.is_action_just_pressed(\"click\"):
+		if plant_grown:
+			if plant == 1:
+				Global.numofcarrots += 1
+				plantgrowing = false
+				plant_grown = false
+				$plant.play(\"none\")
+			if plant == 2:
+				Global.numofonions += 1
+				plantgrowing = false
+				plant_grown = false
+				$plant.play(\"none\")
+			else:
+				pass
+"
+
+[sub_resource type="AtlasTexture" id=18]
+atlas = ExtResource( 2 )
+region = Rect2( 64, 112, 16, 16 )
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ SubResource( 18 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 6, 6 )
+
+[sub_resource type="AtlasTexture" id=19]
+atlas = ExtResource( 2 )
+region = Rect2( 176, 32, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=20]
+atlas = ExtResource( 2 )
+region = Rect2( 160, 32, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=21]
+atlas = ExtResource( 2 )
+region = Rect2( 144, 32, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=22]
+atlas = ExtResource( 2 )
+region = Rect2( 128, 48, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=23]
+atlas = ExtResource( 2 )
+region = Rect2( 112, 48, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=24]
+atlas = ExtResource( 2 )
+region = Rect2( 96, 48, 16, 16 )
+
+[sub_resource type="SpriteFrames" id=10]
+animations = [ {
+"frames": [ SubResource( 19 ), SubResource( 20 ), SubResource( 21 ) ],
+"loop": true,
+"name": "carrotgrowing",
+"speed": 0.0
+}, {
+"frames": [  ],
+"loop": true,
+"name": "none",
+"speed": 0.0
+}, {
+"frames": [ SubResource( 22 ), SubResource( 23 ), SubResource( 24 ) ],
+"loop": true,
+"name": "oniongrowing",
+"speed": 0.0
+} ]
+
+[node name="growingzone" type="StaticBody2D"]
+z_index = 2
+script = SubResource( 11 )
+
+[node name="hoedland" type="AnimatedSprite2D" parent="."]
+frames = SubResource( 1 )
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource( 3 )
+
+[node name="plant" type="AnimatedSprite2D" parent="."]
+position = Vector2( 0, -6 )
+frames = SubResource( 10 )
+animation = "none"
+
+[node name="oniongrowtimer" type="Timer" parent="."]
+wait_time = 5.0
+
+[node name="carrotgrowtimer" type="Timer" parent="."]
+wait_time = 5.0
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_Area2D_area_entered"]
+[connection signal="input_event" from="Area2D" to="." method="_on_Area2D_input_event"]
+[connection signal="timeout" from="oniongrowtimer" to="." method="_on_oniongrowtimer_timeout"]
+[connection signal="timeout" from="carrotgrowtimer" to="." method="_on_carrotgrowtimer_timeout"]

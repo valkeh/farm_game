@@ -1,0 +1,69 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Shop.gd" type="Script" id=1]
+[ext_resource path="res://farmingTilesheetComplete.png" type="Texture2D" id=2]
+[ext_resource path="res://berry_seedpack.tscn" type="PackedScene" id=3]
+[ext_resource path="res://shopmenu.tscn" type="PackedScene" id=4]
+
+[sub_resource type="AtlasTexture" id=7]
+atlas = ExtResource( 2 )
+region = Rect2( 0, 16, 16, 16 )
+
+[sub_resource type="SpriteFrames" id=2]
+animations = [ {
+"frames": [ SubResource( 7 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="AtlasTexture" id=8]
+atlas = ExtResource( 2 )
+region = Rect2( 0, 170, 34, 34 )
+
+[sub_resource type="SpriteFrames" id=4]
+animations = [ {
+"frames": [ SubResource( 8 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 15, 11.75 )
+
+[sub_resource type="CircleShape2D" id=6]
+radius = 14.0
+
+[node name="Shop" type="StaticBody2D"]
+script = ExtResource( 1 )
+
+[node name="shopkeeper" type="AnimatedSprite2D" parent="."]
+position = Vector2( 0, -1.18 )
+frames = SubResource( 2 )
+
+[node name="shop_art" type="AnimatedSprite2D" parent="."]
+visible = false
+position = Vector2( 1, -9 )
+scale = Vector2( 1.58824, 1.61091 )
+frames = SubResource( 4 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( -1, 0 )
+shape = SubResource( 5 )
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( 0, 4 )
+shape = SubResource( 6 )
+
+[node name="berry_seedpack" parent="." instance=ExtResource( 3 )]
+visible = false
+position = Vector2( 24, 2 )
+
+[node name="shopmenu" parent="." instance=ExtResource( 4 )]
+z_index = 7
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_Area2D_body_exited"]

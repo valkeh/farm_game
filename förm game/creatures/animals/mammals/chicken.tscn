@@ -1,0 +1,89 @@
+[gd_scene load_steps=8 format=3 uid="uid://cunkj364taxhc"]
+
+[ext_resource type="Texture2D" uid="uid://bvvo1ldww1og8" path="res://sprites/Animal Basic Asset Pack/Clucking Chicken/CluckingChickenIdleSide.png" id="1"]
+[ext_resource type="Script" path="res://creatures/animals/mammals/chicken.gd" id="2"]
+
+[sub_resource type="CircleShape2D" id="8"]
+radius = 5.09902
+
+[sub_resource type="Animation" id="9"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="11"]
+resource_name = "eating"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [1, 2, 3]
+}
+
+[sub_resource type="Animation" id="10"]
+resource_name = "walking"
+length = 0.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [1, 2, 3]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_e3r8a"]
+_data = {
+"RESET": SubResource("9"),
+"eating": SubResource("11"),
+"walking": SubResource("10")
+}
+
+[node name="chicken" type="CharacterBody2D"]
+z_index = 2
+collision_mask = 0
+script = ExtResource("2")
+
+[node name="changestatetimer" type="Timer" parent="."]
+autostart = true
+
+[node name="walkingtimer" type="Timer" parent="."]
+autostart = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("8")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1")
+hframes = 4
+
+[node name="anim" type="AnimationPlayer" parent="."]
+playback_speed = 0.5
+libraries = {
+"": SubResource("AnimationLibrary_e3r8a")
+}
+
+[connection signal="timeout" from="changestatetimer" to="." method="_on_changestatetimer_timeout"]
+[connection signal="timeout" from="walkingtimer" to="." method="_on_walkingtimer_timeout"]
