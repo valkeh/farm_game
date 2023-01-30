@@ -1,0 +1,4 @@
+{"parent":"/root/SceneHandler/Map/Vegetation/Trees","path":"res://vegetation/Tree.tscn","pos_x":0,"pos_y":0}
+{"parent":"/root/SceneHandler/Map/Vegetation/Trees","path":"res://vegetation/Tree.tscn","pos_x":-159,"pos_y":0}
+{"parent":"/root/SceneHandler/Map/Vegetation/Trees","path":"res://vegetation/Tree.tscn","pos_x":-77,"pos_y":-87}
+{"parent":"/root/SceneHandler/Map/mobs/Animals","path":"res://creatures/animals/mammals/cow.tscn","pos_x":0,"pos_y":0}

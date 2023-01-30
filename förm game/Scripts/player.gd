@@ -1,10 +1,21 @@
-extends CharacterBody2D
+extends CharacterBody2D	
+var animation_vector = Vector2()
 
 const MOTION_SPEED = 90.0
 var current_anim = ""
-var puppet_pos = Vector2()
-var puppet_motion = Vector2()
+
 var player_state
+
+@onready
+var animation_tree = get_node("AnimationTree")
+
+@onready
+var animation_mode = animation_tree.get("parameters/playback")
+
+#func _ready():
+	#print("hey")
+	#animation_tree.set('parameters/Idle/blend_position', Vector2(0,1))
+	#animation_mode.travel("Idle")
 
 #@rpc(unreliable)
 #func _update_state(p_pos, p_motion):
@@ -30,24 +41,24 @@ func _physics_process(delta):
 		#rpc("_update_state", position, motion)
 		#set_pos_and_motion.rpc(position, motion)
 		
-	var new_anim = "idle"
-	if motion.y < 0:
-		new_anim = "upwalk"	
-	elif motion.y > 0:
-		new_anim = "downwalk"
-	elif motion.x < 0:
-		new_anim = "leftwalk"
-	elif motion.x > 0:
-		new_anim = "rightwalk"
+	
 
-	if new_anim != current_anim:
-		current_anim = new_anim
-		get_node("anim").play(current_anim)	
 		
+	#print(animation_vector)
 	set_velocity(motion * MOTION_SPEED)
+	
 	move_and_slide()
-	#if not is_multiplayer_authority():
-	#	puppet_pos = position # To avoid jitter
+	
+	if (animation_vector != motion.normalized()):
+		animation_vector = motion.normalized()
+		if (motion != Vector2(0, 0)):
+			animation_tree.set('parameters/Walk/blend_position', animation_vector)
+			animation_tree.set('parameters/Idle/blend_position', animation_vector)
+			animation_mode.travel("Walk")
+		else:
+			animation_mode.travel("Idle")
+	else:
+		pass
 		
 	DefinePlayerState()
 
@@ -63,5 +74,22 @@ func player_shop_method():
 func DefinePlayerState():
 
 	#print(str(get_global_position()) + "here is position")
-	player_state = {"T": Time.get_unix_time_from_system() * 1000, "P": get_global_position()}
+	player_state = {"T": GameServer.client_clock, "P": get_global_position(), "A": animation_vector}
 	GameServer.SendPlayerState(player_state)
+
+
+
+func _on_spawn_moose_pressed():
+	GameServer.SpawnOnPress(get_global_position(),["mammals/moose"])
+
+
+func _on_spawn_cow_pressed():
+	GameServer.SpawnOnPress(get_global_position(),["mammals/cow"])
+
+
+func _on_spawn_bird_pressed():
+	GameServer.SpawnOnPress(get_global_position(),["aves/doomlord"])
+
+
+func _on_spawn_chicken_pressed():
+	GameServer.SpawnOnPress(get_global_position(),["mammals/chicken"])

@@ -15,20 +15,27 @@ signal connection_fail()
 func _ready():
 	StartServer()
 	
+	var savegame = FileAccess.open("user://savegame.save", FileAccess.READ)
+	while savegame.get_position() < savegame.get_length():
+		var content = savegame.get_line()
+		var json_object = JSON.new()
+		json_object.parse(content)
+		print (json_object.data["pos_x"])
+	
 func StartServer():
 	network.create_server(port, max_players)
 	multiplayer.set_multiplayer_peer(network)
-	print("Server started")
+	#print("Server started")
 	
 	network.connect("peer_connected", Callable(self, "_Peer_Connected"))	
 	network.connect("peer_disconnected", Callable(self, "_Peer_Disconnected"))
 	
 func _Peer_Connected(player_id):
-	print("User " + str(player_id) + " Connected")
+	#print("User " + str(player_id) + " Connected")
 	player_verification_process.start(player_id)
 	
 func _Peer_Disconnected(player_id):
-	print("User " + str(player_id) + " Disconnected")
+	#print("User " + str(player_id) + " Disconnected")
 	if has_node(str(player_id)):
 		get_node(str(player_id)).queue_free()
 		player_state_collection.erase(player_id)
@@ -62,15 +69,30 @@ func RecievePlayerState(player_state):
 	if player_state_collection.has(player_id):
 		if player_state_collection[player_id]["T"] < player_state["T"]:
 			player_state_collection[player_id] = player_state
-			print(player_state)
+			#print(player_state)
 	else:
-		print("else")
+		#print("else")
 		player_state_collection[player_id] = player_state
 		
 func SendWorldState(world_state):
 	RecieveWorldState.rpc_id(0, world_state)
 	
+@rpc(any_peer)
+func SpawnAnimal(position,animal_type):
+	get_node("Map").SpawnAnimal(position,animal_type) 
+	
 
 @rpc
 func RecieveWorldState(world_state):
+	pass
+	
+@rpc(any_peer)
+func LoadWorldRequest():
+	var savegame = FileAccess.open("user://savegame.save", FileAccess.READ)
+	var content = savegame.get_as_text()
+	print(content)
+	RecieveWorldSave.rpc_id(0, content)
+	
+@rpc
+func RecieveWorldSave(savegame):
 	pass

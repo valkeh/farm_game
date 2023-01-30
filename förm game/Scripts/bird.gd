@@ -5,6 +5,9 @@ var walking = false
 var perched = false
 var flying = false
 var current_anim = ""
+var state
+var type
+
 
 var xdir = 1 #1 1 == right -1 == left
 var ydir = 1 #1 1 == down -1 == up
@@ -28,50 +31,46 @@ func _update_state(p_pos, p_motion):
 	puppet_motion = p_motion
 	
 func _physics_process(delta):
-	var waittime = 1
-	if is_multiplayer_authority():
-		if flying == true:
-			speed = 50
-			if moving_vertical_horizontal == 1:
-				motion.x = speed * xdir
-				motion.y = 0
-			elif moving_vertical_horizontal == 2:
-				motion.y = speed * ydir
-				motion.x = 0
-			
-			for body in $Area2D.get_overlapping_areas():
-				if body.is_in_group("perch"):
-					walking = true
-					flying = false
-		
-		if walking == false:
-			speed = 5
-			var x = randf_range(1,2)
-			if x > 1.5:
-				moving_vertical_horizontal = 1
-			else:
-				moving_vertical_horizontal = 2
-					
-				
-		if walking == true:
-			speed = 5
-			if moving_vertical_horizontal == 1:
-				motion.x = speed * xdir
-				motion.y = 0
-			elif moving_vertical_horizontal == 2:
-				motion.y = speed * ydir
-				motion.x = 0
-				
-		if eating == true:
-			speed = 5
-			motion.x = 0
+
+	if flying == true:
+		speed = 50
+		if moving_vertical_horizontal == 1:
+			motion.x = speed * xdir
 			motion.y = 0
-			
-		rpc("_update_state", position, motion)
+		elif moving_vertical_horizontal == 2:
+			motion.y = speed * ydir
+			motion.x = 0
 		
-	else:
-		position = puppet_pos
-		motion = puppet_motion
+		for body in $Area2D.get_overlapping_areas():
+			if body.is_in_group("perch"):
+				walking = true
+				flying = false
+	
+	if walking == false:
+		speed = 5
+		var x = randf_range(1,2)
+		if x > 1.5:
+			moving_vertical_horizontal = 1
+		else:
+			moving_vertical_horizontal = 2
+				
+			
+	if walking == true:
+		speed = 5
+		if moving_vertical_horizontal == 1:
+			motion.x = speed * xdir
+			motion.y = 0
+		elif moving_vertical_horizontal == 2:
+			motion.y = speed * ydir
+			motion.x = 0
+			
+	if eating == true:
+		speed = 5
+		motion.x = 0
+		motion.y = 0
+		
+	rpc("_update_state", position, motion)
+
 		
 	var new_anim = "walking"
 	if motion.y < 0:
@@ -91,9 +90,7 @@ func _physics_process(delta):
 		
 	set_velocity(motion)
 	move_and_slide()
-	
-	if not is_multiplayer_authority():
-		puppet_pos = position # To avoid jitter
+
 				
 func _on_changestatetimer_timeout():
 	var waittime = 1
@@ -128,3 +125,6 @@ func _on_walkingtimer_timeout():
 		ydir = -1
 	$walkingtimer.wait_time = waittime
 	$walkingtimer.start()
+	
+func MoveAnimal(new_position):
+	set_position(new_position)

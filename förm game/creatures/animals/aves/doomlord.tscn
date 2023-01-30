@@ -3,12 +3,12 @@
 [ext_resource type="Texture2D" uid="uid://b1p8k6rurrc7l" path="res://sprites/Tiny, Tiny Heroes - Animals/spritesheet.png" id="1"]
 [ext_resource type="Script" path="res://creatures/animals/aves/doomlord.gd" id="2"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_8ledv"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_je1wo"]
 radius = 8.0
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_tsjor"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_uc16r"]
 
-[sub_resource type="Animation" id="Animation_rnrl7"]
+[sub_resource type="Animation" id="Animation_yt5k7"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -23,7 +23,7 @@ tracks/0/keys = {
 "values": [224]
 }
 
-[sub_resource type="Animation" id="Animation_mdig0"]
+[sub_resource type="Animation" id="Animation_y620d"]
 resource_name = "eating"
 loop_mode = 1
 tracks/0/type = "value"
@@ -39,7 +39,7 @@ tracks/0/keys = {
 "values": [224]
 }
 
-[sub_resource type="Animation" id="Animation_6jvw7"]
+[sub_resource type="Animation" id="Animation_n3vvf"]
 resource_name = "flying"
 length = 0.5
 loop_mode = 1
@@ -56,7 +56,7 @@ tracks/0/keys = {
 "values": [229, 230, 231]
 }
 
-[sub_resource type="Animation" id="Animation_sh4lu"]
+[sub_resource type="Animation" id="Animation_s1y3f"]
 resource_name = "walking"
 length = 0.4
 loop_mode = 1
@@ -73,12 +73,12 @@ tracks/0/keys = {
 "values": [225, 226, 227]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_35wtu"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_y7s1y"]
 _data = {
-"RESET": SubResource("Animation_rnrl7"),
-"eating": SubResource("Animation_mdig0"),
-"flying": SubResource("Animation_6jvw7"),
-"walking": SubResource("Animation_sh4lu")
+"RESET": SubResource("Animation_yt5k7"),
+"eating": SubResource("Animation_y620d"),
+"flying": SubResource("Animation_n3vvf"),
+"walking": SubResource("Animation_s1y3f")
 }
 
 [node name="doomlord" type="CharacterBody2D"]
@@ -96,11 +96,11 @@ autostart = true
 [node name="Area2D" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-shape = SubResource("CircleShape2D_8ledv")
+shape = SubResource("CircleShape2D_je1wo")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
-shape = SubResource("CircleShape2D_tsjor")
+shape = SubResource("CircleShape2D_uc16r")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1")
@@ -111,7 +111,7 @@ frame = 224
 [node name="anim" type="AnimationPlayer" parent="."]
 playback_speed = 0.5
 libraries = {
-"": SubResource("AnimationLibrary_35wtu")
+"": SubResource("AnimationLibrary_y7s1y")
 }
 
 [connection signal="timeout" from="changestatetimer" to="." method="_on_changestatetimer_timeout"]

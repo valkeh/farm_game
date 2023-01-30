@@ -12,11 +12,11 @@ var latency_array = []
 var latency = 0
 var delta_latency = 0
 
-
 func _ready():
 	multiplayer.connect("connected_to_server", Callable(self, "_connected_succeeded"))
 	multiplayer.connect("connection_failed", Callable(self, "_connected_fail"))
 	ConnectToServer()
+	
 
 func ConnectToServer():
 	network.create_client(ip, port)
@@ -41,6 +41,7 @@ func _connected_succeeded():
 	timer.autostart = true
 	timer.connect("timeout", Callable(self, "DetermineLatency"))
 	self.add_child(timer)
+	SendWorldRequest()
 	
 @rpc
 func FetchServerTime(client_time):
@@ -88,3 +89,47 @@ func RecievePlayerState(player_state):
 @rpc(any_peer)
 func RecieveWorldState(world_state):
 	get_node("../SceneHandler/Map").UpdateWorldState(world_state)
+	
+@rpc
+func SpawnAnimal(position):
+	pass
+	
+func SendWorldRequest():
+	LoadWorldRequest.rpc_id(1)
+	
+@rpc
+func LoadWorldRequest():
+	pass
+	
+@rpc(any_peer)
+func RecieveWorldSave(save_game):
+	
+	var save_nodes = get_tree().get_nodes_in_group("Persist")
+	for i in save_nodes:
+		i.queue_free()
+	
+	var some_array = save_game.rsplit("\n")
+	var json_object = JSON.new()
+	json_object.parse(JSON.stringify(save_game))
+	
+	for n in some_array.size():
+		
+		json_object.parse(some_array[n])
+		print(json_object.data["pos_x"])
+	
+		# Firstly, we need to create the object and add it to the tree and set its position.
+		var new_object = load(json_object.data["path"]).instantiate()
+		get_node(json_object.data["parent"]).add_child(new_object)
+		new_object.position = Vector2(json_object.data["pos_x"], json_object.data["pos_y"])
+
+		# Now we set the remaining variables.
+		for i in json_object.data.keys():
+			if i == "path" or i == "parent" or i == "pos_x" or i == "pos_y":
+				continue
+			new_object.set(i, json_object.data[i])
+	
+func SpawnOnPress(position, animal_type):
+	#print("hey")
+	SpawnAnimal.rpc_id(1, position, animal_type)
+	
+

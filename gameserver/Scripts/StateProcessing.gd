@@ -8,5 +8,6 @@ func _physics_process(delta):
 		for player in world_state.keys():
 			world_state[player].erase("T")
 		world_state["T"] = Time.get_unix_time_from_system() * 1000
+		world_state["Animals"] = get_node("../Map").animal_list 
 		
 		get_parent().SendWorldState(world_state)

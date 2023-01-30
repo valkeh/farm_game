@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://dwsixoidupt31"]
+
+[node name="Map" type="Node2D"]
+
+[node name="Animals" type="Node" parent="."]
+
+[node name="Buildings" type="Node" parent="."]
+
+[node name="players" type="Node" parent="."]
+
+[node name="OtherPlayers" type="Node" parent="players"]
+
+[node name="Vegetation" type="Node" parent="."]
+
+[node name="Trees" type="Node2D" parent="Vegetation"]
+position = Vector2(105, 41)
+
+[node name="spawn_points" type="Node2D" parent="."]
+
+[node name="dm" type="Node2D" parent="spawn_points"]
+
+[node name="1" type="Marker2D" parent="spawn_points"]
+position = Vector2(47, 6)
+
+[node name="2" type="Marker2D" parent="spawn_points"]
+position = Vector2(-175, -2)
+
+[node name="3" type="Marker2D" parent="spawn_points"]
+position = Vector2(181, 32)
+
+[node name="4" type="Marker2D" parent="spawn_points"]
+position = Vector2(-50, 26)
+
+[node name="mobs" type="Node" parent="."]
+
+[node name="Entities" type="Node" parent="mobs"]

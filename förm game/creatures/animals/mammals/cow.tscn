@@ -3,9 +3,9 @@
 [ext_resource type="Script" path="res://creatures/animals/mammals/cow.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://dvcihepnauhss" path="res://sprites/Animal Basic Asset Pack/Grazing Cow/GrazingCowIdleSide.png" id="2"]
 
-[sub_resource type="CircleShape2D" id="1"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_l1icv"]
 
-[sub_resource type="Animation" id="2"]
+[sub_resource type="Animation" id="Animation_4b5v1"]
 length = 0.001
 loop_mode = 1
 tracks/0/type = "value"
@@ -21,7 +21,7 @@ tracks/0/keys = {
 "values": [0]
 }
 
-[sub_resource type="Animation" id="4"]
+[sub_resource type="Animation" id="Animation_xnoii"]
 resource_name = "eating"
 length = 0.5
 tracks/0/type = "value"
@@ -37,7 +37,7 @@ tracks/0/keys = {
 "values": [1, 2, 3]
 }
 
-[sub_resource type="Animation" id="3"]
+[sub_resource type="Animation" id="Animation_5tb0t"]
 resource_name = "walking"
 length = 0.5
 loop_mode = 1
@@ -54,11 +54,11 @@ tracks/0/keys = {
 "values": [1, 2, 3]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_lvumd"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fbejt"]
 _data = {
-"RESET": SubResource("2"),
-"eating": SubResource("4"),
-"walking": SubResource("3")
+"RESET": SubResource("Animation_4b5v1"),
+"eating": SubResource("Animation_xnoii"),
+"walking": SubResource("Animation_5tb0t")
 }
 
 [node name="cow" type="CharacterBody2D"]
@@ -73,7 +73,7 @@ autostart = true
 autostart = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("1")
+shape = SubResource("CircleShape2D_l1icv")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2")
@@ -82,7 +82,7 @@ hframes = 4
 [node name="anim" type="AnimationPlayer" parent="."]
 playback_speed = 0.5
 libraries = {
-"": SubResource("AnimationLibrary_lvumd")
+"": SubResource("AnimationLibrary_fbejt")
 }
 
 [connection signal="timeout" from="changestatetimer" to="." method="_on_changestatetimer_timeout"]
