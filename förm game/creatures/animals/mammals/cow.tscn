@@ -80,7 +80,6 @@ texture = ExtResource("2")
 hframes = 4
 
 [node name="anim" type="AnimationPlayer" parent="."]
-playback_speed = 0.5
 libraries = {
 "": SubResource("AnimationLibrary_fbejt")
 }
